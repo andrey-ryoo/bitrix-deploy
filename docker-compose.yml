@@ -1,0 +1,46 @@
+version: '3.4'
+
+services:
+  nginx:
+    image: kenshir007/nginx-bx:1.0.1
+    depends_on:
+      - php-fpm
+    volumes:
+      - ${DATA}:/var/www/html
+    ports:
+      - ${PORT}:80
+    networks:
+      - deployment
+    restart: always
+
+  php-fpm:
+    image: kenshir007/php-fpm:1.0.1
+    links:
+      - memcached
+    depends_on:
+      - memcached
+      - mysql
+    volumes:
+      - ${DATA}:/var/www/html
+    networks:
+      - deployment
+    restart: always
+
+  memcached:
+    image: memcached
+    entrypoint:
+      - memcached
+      - --memory-limit=2048m
+      - --max-item-size=128m
+    networks:
+      - deployment
+    restart: always
+
+  sphinx:
+    image: kenshir007/sphinx:1.0.1
+    networks:
+      - deployment
+    restart: always
+
+networks:
+  deployment:
