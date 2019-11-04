@@ -19,7 +19,6 @@ services:
       - memcached
     depends_on:
       - memcached
-      - mysql
     volumes:
       - ${DATA}:/var/www/html
     networks:
